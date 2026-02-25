@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#F9A8C9">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="טעימות">
+<link rel="manifest" href="./manifest.json">
+<title>טעימות תינוק 👶</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFF8F9;
+  --card: #FFFFFF;
+  --pink: #F472B6;
+  --pink-light: #FDF2F8;
+  --pink-soft: #FCE7F3;
+  --green: #34D399;
+  --green-light: #ECFDF5;
+  --orange: #FB923C;
+  --orange-light: #FFF7ED;
+  --blue: #60A5FA;
+  --blue-light: #EFF6FF;
+  --purple: #A78BFA;
+  --purple-light: #F5F3FF;
+  --red: #F87171;
+  --red-light: #FEF2F2;
+  --text: #1E1B4B;
+  --text-muted: #6B7280;
+  --border: #F3E8EE;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, #F9A8D4 0%, #C084FC 100%);
+  padding: 20px 20px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  top: -80px; left: -60px;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  bottom: -40px; right: 20px;
+}
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; z-index: 1;
+}
+.baby-name-display { display: flex; align-items: center; gap: 8px; }
+.baby-emoji { font-size: 28px; }
+.baby-name-text {
+  color: white;
+  font-size: 22px;
+  font-weight: 800;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.settings-btn {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.settings-btn:active { background: rgba(255,255,255,0.4); }
+
+.stats-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  position: relative; z-index: 1;
+}
+.stat-card {
+  flex: 1;
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 10px 6px;
+  text-align: center;
+  color: white;
+}
+.stat-number { font-size: 22px; font-weight: 800; line-height: 1; }
+.stat-label { font-size: 10px; opacity: 0.85; margin-top: 2px; }
+
+/* ── OFFLINE BANNER ── */
+.offline-banner {
+  display: none;
+  background: #374151;
+  color: white;
+  text-align: center;
+  padding: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.offline-banner.show { display: block; }
+
+/* ── TABS ── */
+.tabs-wrap {
+  background: var(--card);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0;
+  padding: 14px 12px 12px;
+  border: none;
+  background: none;
+  font-family: 'Heebo', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 4px;
+}
+.tab.active { color: var(--pink); border-bottom-color: var(--pink); font-weight: 700; }
+
+/* ── CONTENT ── */
+.content { padding: 16px; padding-bottom: 90px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── CATEGORY HEADER ── */
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  margin-top: 8px;
+}
+.category-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.category-title { font-size: 17px; font-weight: 700; }
+.category-progress { margin-right: auto; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap {
+  background: var(--border);
+  border-radius: 99px;
+  height: 6px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--green), #86EFAC);
+  transition: width 0.5s ease;
+}
+
+/* ── ADD FOOD BTN ── */
+.add-food-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--pink-soft);
+  border: 2px dashed var(--pink);
+  border-radius: 14px;
+  padding: 12px 16px;
+  width: 100%;
+  font-family: 'Heebo', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pink);
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+.add-food-btn:active { opacity: 0.75; }
+
+/* ── FOOD GRID ── */
+.food-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.food-item {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+.food-item:active { transform: scale(0.96); }
+.food-item.reaction-ok { border-color: var(--green); background: var(--green-light); }
+.food-item.reaction-mild { border-color: var(--orange); background: var(--orange-light); }
+.food-item.reaction-allergic { border-color: var(--red); background: var(--red-light); }
+.food-item.custom-item { border-color: var(--purple); }
+.food-item.custom-item.reaction-ok { border-color: var(--green); }
+
+.food-emoji { font-size: 28px; }
+.food-name { font-size: 13px; font-weight: 600; text-align: center; line-height: 1.2; }
+.food-status {
+  position: absolute;
+  top: 6px; left: 6px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+}
+.food-item.reaction-ok .food-status { background: var(--green); color: white; }
+.food-item.reaction-mild .food-status { background: var(--orange); color: white; }
+.food-item.reaction-allergic .food-status { background: var(--red); color: white; }
+.food-date { font-size: 10px; color: var(--text-muted); text-align: center; }
+.custom-badge {
+  position: absolute;
+  top: 6px; right: 6px;
+  background: var(--purple);
+  color: white;
+  border-radius: 6px;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 4px;
+}
+.delete-custom {
+  position: absolute;
+  bottom: 4px; left: 4px;
+  background: var(--red-light);
+  border: none;
+  border-radius: 6px;
+  color: var(--red);
+  font-size: 10px;
+  padding: 2px 5px;
+  cursor: pointer;
+  display: none;
+}
+.food-item.custom-item:hover .delete-custom,
+.food-item.custom-item:active .delete-custom { display: block; }
+
+/* ── ALLERGEN LIST ── */
+.allergen-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.allergen-item {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px 16px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.allergen-item:active { transform: scale(0.98); }
+.allergen-item.reaction-ok { border-color: var(--green); background: var(--green-light); }
+.allergen-item.reaction-mild { border-color: var(--orange); background: var(--orange-light); }
+.allergen-item.reaction-allergic { border-color: var(--red); background: var(--red-light); }
+.allergen-emoji { font-size: 24px; }
+.allergen-info { flex: 1; }
+.allergen-name { font-size: 15px; font-weight: 700; }
+.allergen-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.allergen-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.badge-important { background: var(--red-light); color: var(--red); }
+.badge-done { background: var(--green-light); color: #059669; }
+.badge-mild { background: var(--orange-light); color: #D97706; }
+.badge-allergy { background: var(--red); color: white; }
+
+/* ── HISTORY ── */
+.history-item {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.history-emoji { font-size: 24px; }
+.history-info { flex: 1; }
+.history-name { font-size: 15px; font-weight: 700; }
+.history-date { font-size: 11px; color: var(--text-muted); }
+.history-reaction { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card);
+  border-radius: 24px 24px 0 0;
+  padding: 24px 20px 40px;
+  width: 100%;
+  max-width: 480px;
+  animation: slideUp 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.modal-handle {
+  width: 40px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+.modal-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+.modal-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
+
+.reaction-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.reaction-btn {
+  border: 2px solid var(--border);
+  background: var(--card);
+  border-radius: 14px;
+  padding: 12px 8px;
+  cursor: pointer;
+  font-family: 'Heebo', sans-serif;
+  text-align: center;
+  transition: all 0.2s;
+  font-size: 12px;
+  font-weight: 600;
+}
+.reaction-btn:active { transform: scale(0.95); }
+.reaction-btn .rbtn-emoji { font-size: 24px; display: block; margin-bottom: 4px; }
+.rbtn-ok.selected { border-color: var(--green); background: var(--green-light); color: #059669; }
+.rbtn-mild.selected { border-color: var(--orange); background: var(--orange-light); color: #D97706; }
+.rbtn-allergic.selected { border-color: var(--red); background: var(--red-light); color: #DC2626; }
+
+.notes-input, .name-input, .custom-input {
+  width: 100%;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 14px;
+  outline: none;
+  color: var(--text);
+  background: var(--bg);
+}
+.notes-input { resize: none; margin-bottom: 16px; }
+.notes-input:focus, .name-input:focus, .custom-input:focus { border-color: var(--pink); }
+.name-input { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+
+.modal-actions { display: flex; gap: 10px; }
+.btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-primary:active { opacity: 0.85; }
+.btn-secondary {
+  background: var(--pink-soft);
+  color: var(--pink);
+  border: none;
+  border-radius: 14px;
+  padding: 14px 20px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-reset {
+  width: 100%;
+  background: var(--red-light);
+  color: var(--red);
+  border: none;
+  border-radius: 14px;
+  padding: 12px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* ── ADD FOOD MODAL ── */
+.emoji-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+  max-height: 140px;
+  overflow-y: auto;
+}
+.emoji-opt {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  transition: all 0.15s;
+}
+.emoji-opt:active { transform: scale(0.9); }
+.emoji-opt.selected { border-color: var(--pink); background: var(--pink-soft); }
+
+.cat-select {
+  width: 100%;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  color: var(--text);
+  background: var(--bg);
+  margin-bottom: 14px;
+  direction: rtl;
+}
+.cat-select:focus { border-color: var(--pink); }
+
+.field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.empty-hint {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<!-- OFFLINE BANNER -->
+<div class="offline-banner" id="offlineBanner">📵 מצב אופליין – הנתונים שמורים במכשיר</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="baby-name-display">
+      <span class="baby-emoji">👶</span>
+      <span class="baby-name-text" id="headerName">שם הילד</span>
+    </div>
+    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number" id="statTried">0</div>
+      <div class="stat-label">נוסו</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="statOk">0</div>
+      <div class="stat-label">עברו טוב</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="statAllergen">0</div>
+      <div class="stat-label">אלרגנים</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="statAlert">0</div>
+      <div class="stat-label">תגובות</div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('vegetables',this)">🥕 ירקות</button>
+    <button class="tab" onclick="switchTab('legumes',this)">🫘 קטניות</button>
+    <button class="tab" onclick="switchTab('fish',this)">🐟 דגים ובשר</button>
+    <button class="tab" onclick="switchTab('dairy',this)">🥛 חלב</button>
+    <button class="tab" onclick="switchTab('allergens',this)">⚠️ אלרגנים</button>
+    <button class="tab" onclick="switchTab('history',this)">📋 היסטוריה</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- VEGETABLES -->
+<div class="section active" id="section-vegetables">
+  <div class="category-header">
+    <div class="category-icon" style="background:#ECFDF5">🥦</div>
+    <div class="category-title">ירקות</div>
+    <span class="category-progress" id="prog-vegetables"></span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar-vegetables"></div></div>
+  <button class="add-food-btn" onclick="openAddFood('vegetables')">➕ הוסיפי מזון משלך</button>
+  <div class="food-grid" id="grid-vegetables"></div>
+</div>
+
+<!-- LEGUMES -->
+<div class="section" id="section-legumes">
+  <div class="category-header">
+    <div class="category-icon" style="background:#FFF7ED">🫘</div>
+    <div class="category-title">קטניות</div>
+    <span class="category-progress" id="prog-legumes"></span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar-legumes" style="background:linear-gradient(90deg,#FB923C,#FCD34D)"></div></div>
+  <button class="add-food-btn" onclick="openAddFood('legumes')">➕ הוסיפי מזון משלך</button>
+  <div class="food-grid" id="grid-legumes"></div>
+</div>
+
+<!-- FISH -->
+<div class="section" id="section-fish">
+  <div class="category-header">
+    <div class="category-icon" style="background:#EFF6FF">🐟</div>
+    <div class="category-title">דגים, עוף ובשר</div>
+    <span class="category-progress" id="prog-fish"></span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar-fish" style="background:linear-gradient(90deg,#60A5FA,#818CF8)"></div></div>
+  <button class="add-food-btn" onclick="openAddFood('fish')">➕ הוסיפי מזון משלך</button>
+  <div class="food-grid" id="grid-fish"></div>
+</div>
+
+<!-- DAIRY -->
+<div class="section" id="section-dairy">
+  <div class="category-header">
+    <div class="category-icon" style="background:#F5F3FF">🥛</div>
+    <div class="category-title">מוצרי חלב</div>
+    <span class="category-progress" id="prog-dairy"></span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="pbar-dairy" style="background:linear-gradient(90deg,#A78BFA,#F472B6)"></div></div>
+  <button class="add-food-btn" onclick="openAddFood('dairy')">➕ הוסיפי מזון משלך</button>
+  <div class="food-grid" id="grid-dairy"></div>
+</div>
+
+<!-- ALLERGENS -->
+<div class="section" id="section-allergens">
+  <div class="category-header">
+    <div class="category-icon" style="background:#FEF2F2">⚠️</div>
+    <div class="category-title">האלרגנים העיקריים</div>
+  </div>
+  <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">מומלץ להציג כל אלרגן בנפרד ולעקוב אחרי תגובות. יש להתייעץ עם רופא ילדים לפני הכנסת אלרגנים.</p>
+  <div class="allergen-list" id="grid-allergens"></div>
+</div>
+
+<!-- HISTORY -->
+<div class="section" id="section-history">
+  <div class="category-header">
+    <div class="category-icon" style="background:#F5F3FF">📋</div>
+    <div class="category-title">היסטוריית טעימות</div>
+  </div>
+  <div id="history-list"></div>
+</div>
+
+</div><!-- /content -->
+
+<!-- ── FOOD LOG MODAL ── -->
+<div class="modal-overlay" id="foodModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div style="font-size:40px;text-align:center;margin-bottom:8px" id="modalEmoji">🥕</div>
+    <div class="modal-title" style="text-align:center" id="modalTitle">שם המזון</div>
+    <div class="modal-subtitle" style="text-align:center" id="modalDate"></div>
+    <label class="field-label">איך הגיבו?</label>
+    <div class="reaction-buttons">
+      <button class="reaction-btn rbtn-ok" onclick="selectReaction('ok')">
+        <span class="rbtn-emoji">✅</span>עברה מצוין
+      </button>
+      <button class="reaction-btn rbtn-mild" onclick="selectReaction('mild')">
+        <span class="rbtn-emoji">⚠️</span>תגובה קלה
+      </button>
+      <button class="reaction-btn rbtn-allergic" onclick="selectReaction('allergic')">
+        <span class="rbtn-emoji">🚨</span>תגובה חמורה
+      </button>
+    </div>
+    <textarea class="notes-input" id="modalNotes" rows="3" placeholder="הערות... (תגובה, תסמינים, תאריך הבא וכו')"></textarea>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">ביטול</button>
+      <button class="btn-primary" onclick="saveFood()">💾 שמור</button>
+    </div>
+    <button class="btn-reset" id="resetBtn" onclick="resetFood()" style="display:none">🗑️ מחק רישום זה</button>
+  </div>
+</div>
+
+<!-- ── ADD CUSTOM FOOD MODAL ── -->
+<div class="modal-overlay" id="addFoodModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">➕ הוספת מזון</div>
+    <div class="modal-subtitle">הוסיפי מזון שלא ברשימה</div>
+
+    <label class="field-label">קטגוריה</label>
+    <select class="cat-select" id="addFoodCat">
+      <option value="vegetables">🥕 ירקות</option>
+      <option value="legumes">🫘 קטניות</option>
+      <option value="fish">🐟 דגים ובשר</option>
+      <option value="dairy">🥛 חלב</option>
+    </select>
+
+    <label class="field-label">שם המזון</label>
+    <input type="text" class="custom-input" id="addFoodName" placeholder="לדוג': דגני בוקר, מנגו..." style="margin-bottom:14px">
+
+    <label class="field-label">בחרי אימוג׳י</label>
+    <div class="emoji-picker" id="emojiPicker"></div>
+
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn-secondary" onclick="closeAddFood()">ביטול</button>
+      <button class="btn-primary" onclick="saveCustomFood()">➕ הוסיפי</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── SETTINGS MODAL ── -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⚙️ הגדרות</div>
+    <div class="modal-subtitle">שם הילד יוצג בראש האפליקציה</div>
+    <input type="text" class="name-input" id="nameInput" placeholder="שם הילד..." maxlength="20">
+    
+    <div style="background:var(--blue-light);border-radius:14px;padding:14px;margin-bottom:16px">
+      <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:6px">📱 התקנה על הטלפון</div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.6">ב-Chrome: לחצי על תפריט ⋮ ← "הוסף למסך הבית"<br>ב-Safari: לחצי על שתף ↑ ← "הוסף למסך הבית"</div>
+    </div>
+
+    <div style="background:var(--green-light);border-radius:14px;padding:14px;margin-bottom:16px">
+      <div style="font-size:13px;font-weight:700;color:#059669;margin-bottom:4px">💾 הנתונים שמורים</div>
+      <div style="font-size:12px;color:var(--text-muted)">כל הנתונים נשמרים על המכשיר שלך ונזכרים בין פעמים, גם ללא אינטרנט.</div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeSettings()">ביטול</button>
+      <button class="btn-primary" onclick="saveName()">💾 שמור</button>
+    </div>
+    <button class="btn-reset" onclick="clearAllData()">🗑️ מחק את כל הנתונים</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+const FOODS = {
+  vegetables: [
+    {id:'v1', name:'גזר', emoji:'🥕'},
+    {id:'v2', name:'תפוח אדמה', emoji:'🥔'},
+    {id:'v3', name:'בטטה', emoji:'🍠'},
+    {id:'v4', name:'קישוא', emoji:'🥒'},
+    {id:'v5', name:'ברוקולי', emoji:'🥦'},
+    {id:'v6', name:'כרובית', emoji:'🌸'},
+    {id:'v7', name:'תרד', emoji:'🌿'},
+    {id:'v8', name:'אפונה ירוקה', emoji:'🟢'},
+    {id:'v9', name:'עגבנייה', emoji:'🍅'},
+    {id:'v10', name:'פלפל', emoji:'🫑'},
+    {id:'v11', name:'חצילים', emoji:'🍆'},
+    {id:'v12', name:'סלק', emoji:'🔴'},
+    {id:'v13', name:'כרוב', emoji:'🥬'},
+    {id:'v14', name:'מלפפון', emoji:'🥒'},
+    {id:'v15', name:'תירס', emoji:'🌽'},
+    {id:'v16', name:'אבוקדו', emoji:'🥑'},
+    {id:'v17', name:'דלעת', emoji:'🎃'},
+    {id:'v18', name:'פטריות', emoji:'🍄'},
+    {id:'v19', name:'ארטישוק ירושלמי', emoji:'🌰'},
+    {id:'v20', name:'כרישה', emoji:'🌱'},
+  ],
+  legumes: [
+    {id:'l1', name:'עדשים כתומות', emoji:'🟠'},
+    {id:'l2', name:'עדשים ירוקות', emoji:'🟢'},
+    {id:'l3', name:'חומוס', emoji:'🟡'},
+    {id:'l4', name:'שעועית שחורה', emoji:'⚫'},
+    {id:'l5', name:'שעועית לבנה', emoji:'⚪'},
+    {id:'l6', name:'אפונה', emoji:'🫛'},
+    {id:'l7', name:'פול', emoji:'🟤'},
+    {id:'l8', name:'טופו', emoji:'🧊'},
+    {id:'l9', name:'אדממה', emoji:'🫘'},
+    {id:'l10', name:'שעועית אדומה', emoji:'🔴'},
+  ],
+  fish: [
+    {id:'f1', name:'סלמון', emoji:'🐟'},
+    {id:'f2', name:'טונה', emoji:'🐠'},
+    {id:'f3', name:'אמנון', emoji:'🐡'},
+    {id:'f4', name:'בורי', emoji:'🐟'},
+    {id:'f5', name:'דניס', emoji:'🐠'},
+    {id:'f6', name:'עוף טחון', emoji:'🍗'},
+    {id:'f7', name:'חזה עוף', emoji:'🍗'},
+    {id:'f8', name:'הודו טחון', emoji:'🦃'},
+    {id:'f9', name:'כבד עוף', emoji:'🍖'},
+    {id:'f10', name:'בשר בקר טחון', emoji:'🥩'},
+    {id:'f11', name:'לשון בקר', emoji:'🥩'},
+    {id:'f12', name:'כבש טחון', emoji:'🐑'},
+  ],
+  dairy: [
+    {id:'d1', name:'יוגורט טבעי', emoji:'🫙'},
+    {id:'d2', name:'גבינה לבנה 5%', emoji:'🧀'},
+    {id:'d3', name:'קוטג׳', emoji:'🥛'},
+    {id:'d4', name:'גבינה צהובה', emoji:'🧀'},
+    {id:'d5', name:'לבן', emoji:'🥛'},
+    {id:'d6', name:'חמאה', emoji:'🧈'},
+    {id:'d7', name:'שמנת חמוצה', emoji:'🫗'},
+    {id:'d8', name:'גבינת עיזים', emoji:'🐐'},
+    {id:'d9', name:'ריקוטה', emoji:'⬜'},
+    {id:'d10', name:'גבינת קממבר', emoji:'🟡'},
+  ],
+};
+
+const ALLERGENS = [
+  {id:'a1', name:'חלב פרה', emoji:'🥛', desc:'כולל גבינות, יוגורט, חמאה'},
+  {id:'a2', name:'ביצים', emoji:'🥚', desc:'ביצה שלמה, חלמון, חלבון'},
+  {id:'a3', name:'אגוזי עץ', emoji:'🌰', desc:'אגוז מלך, קשיו, שקד, לוז, פקאן, מקדמיה'},
+  {id:'a4', name:'בוטנים', emoji:'🥜', desc:'חמאת בוטנים, אבקת בוטנים'},
+  {id:'a5', name:'חיטה / גלוטן', emoji:'🌾', desc:'לחם, פסטה, קרקרים, קמח'},
+  {id:'a6', name:'דגים', emoji:'🐟', desc:'סלמון, טונה, אמנון, בורי, דניס'},
+  {id:'a7', name:'סויה', emoji:'🫘', desc:'חלב סויה, טופו, אדממה'},
+  {id:'a8', name:'שומשום', emoji:'🌱', desc:'טחינה, שמן שומשום, זרעי שומשום'},
+  {id:'a9', name:'סלרי', emoji:'🌿', desc:'עלים, שורש סלרי, זרעים'},
+  {id:'a10', name:'חרדל', emoji:'🌻', desc:'רוטב חרדל, זרעי חרדל'},
+  {id:'a11', name:'גרגרי לופין', emoji:'🌺', desc:'קמח לופין, זרעים'},
+  {id:'a12', name:'קוקוס', emoji:'🥥', desc:'חלב קוקוס, שמן קוקוס, קוקוס מגורד'},
+  {id:'a13', name:'קיווי', emoji:'🥝', desc:'פרי הקיווי ומיצו'},
+  {id:'a14', name:'תותים', emoji:'🍓', desc:'תות שדה טרי ומיץ תות'},
+];
+
+const FOOD_EMOJIS = ['🍎','🍊','🍋','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝',
+  '🍅','🥕','🌽','🌶','🥦','🥬','🥒','🍆','🧅','🧄','🥔','🍠','🌰','🥑',
+  '🍗','🥩','🍖','🐟','🐠','🥚','🧀','🥛','🧈','🫙','🍚','🍞','🥙',
+  '🫘','🟠','🟡','🟢','🟤','⚫','⚪','🔴','🌱','🌿','🍄','🎃','🐐','🦃'];
+
+// ═══════════════════════════════════════════════════════════════
+// STATE – all persisted in localStorage
+// ═══════════════════════════════════════════════════════════════
+let babyName    = localStorage.getItem('babyName') || '';
+let records     = JSON.parse(localStorage.getItem('records')     || '{}');
+let customFoods = JSON.parse(localStorage.getItem('customFoods') || '[]');
+
+function save() {
+  localStorage.setItem('records',     JSON.stringify(records));
+  localStorage.setItem('customFoods', JSON.stringify(customFoods));
+  localStorage.setItem('babyName',    babyName);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+function init() {
+  document.getElementById('headerName').textContent = babyName || 'שם הילד';
+  renderAll();
+  updateStats();
+
+  // Service Worker registration
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+
+  // Offline/online detection
+  const banner = document.getElementById('offlineBanner');
+  const updateOnline = () => {
+    if (navigator.onLine) banner.classList.remove('show');
+    else banner.classList.add('show');
+  };
+  window.addEventListener('online',  updateOnline);
+  window.addEventListener('offline', updateOnline);
+  updateOnline();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+function allFoodsFlat() {
+  return [...Object.values(FOODS).flat(), ...customFoods, ...ALLERGENS];
+}
+
+function renderAll() {
+  ['vegetables','legumes','fish','dairy'].forEach(cat => {
+    const base = FOODS[cat];
+    const custom = customFoods.filter(f => f.cat === cat);
+    renderCategory(cat, [...base, ...custom]);
+  });
+  renderAllergens();
+  renderHistory();
+}
+
+function renderCategory(cat, foods) {
+  const grid = document.getElementById('grid-' + cat);
+  const tried = foods.filter(f => records[f.id]).length;
+  document.getElementById('prog-' + cat).textContent = `${tried}/${foods.length}`;
+  const pct = foods.length ? (tried / foods.length * 100) : 0;
+  document.getElementById('pbar-' + cat).style.width = pct + '%';
+
+  grid.innerHTML = foods.map(f => {
+    const rec = records[f.id];
+    const isCustom = !!f.cat;
+    let cls = '', statusEl = '', dateEl = '';
+    if (rec) {
+      cls = 'reaction-' + rec.reaction;
+      const icons = {ok:'✓', mild:'⚠', allergic:'🚨'};
+      statusEl = `<div class="food-status">${icons[rec.reaction]}</div>`;
+      dateEl   = `<div class="food-date">${formatDate(rec.date)}</div>`;
+    }
+    const customBadge = isCustom ? `<div class="custom-badge">שלי</div>` : '';
+    const deleteBtn   = isCustom ? `<button class="delete-custom" onclick="deleteCustom(event,'${f.id}')">🗑</button>` : '';
+    return `<div class="food-item ${cls} ${isCustom?'custom-item':''}" onclick="openFood('${f.id}')">
+      ${statusEl}${customBadge}
+      <span class="food-emoji">${f.emoji}</span>
+      <span class="food-name">${f.name}</span>
+      ${dateEl}${deleteBtn}
+    </div>`;
+  }).join('');
+}
+
+function renderAllergens() {
+  const grid = document.getElementById('grid-allergens');
+  grid.innerHTML = ALLERGENS.map(a => {
+    const rec = records[a.id];
+    let cls = '', badge = `<span class="allergen-badge badge-important">חשוב!</span>`;
+    if (rec) {
+      cls = 'reaction-' + rec.reaction;
+      const labels  = {ok:'עברה מצוין ✓', mild:'תגובה קלה ⚠️', allergic:'אלרגיה! 🚨'};
+      const bClsMap = {ok:'badge-done', mild:'badge-mild', allergic:'badge-allergy'};
+      badge = `<span class="allergen-badge ${bClsMap[rec.reaction]}">${labels[rec.reaction]}</span>`;
+    }
+    return `<div class="allergen-item ${cls}" onclick="openFood('${a.id}')">
+      <span class="allergen-emoji">${a.emoji}</span>
+      <div class="allergen-info">
+        <div class="allergen-name">${a.name}</div>
+        <div class="allergen-desc">${a.desc}</div>
+        ${rec ? `<div class="allergen-desc">${formatDate(rec.date)}</div>` : ''}
+      </div>${badge}
+    </div>`;
+  }).join('');
+}
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  const tried = allFoodsFlat()
+    .filter(f => records[f.id])
+    .sort((a,b) => new Date(records[b.id].date) - new Date(records[a.id].date));
+
+  if (!tried.length) {
+    list.innerHTML = '<div class="empty-hint">עדיין לא הוקלטו טעימות 🍼<br><br>לחצי על מזון באחת הקטגוריות כדי להתחיל!</div>';
+    return;
+  }
+  const labels = {ok:'עברה מצוין ✓', mild:'תגובה קלה ⚠️', allergic:'אלרגיה! 🚨'};
+  const bgcol  = {ok:'background:#ECFDF5;color:#059669', mild:'background:#FFF7ED;color:#D97706', allergic:'background:#FEF2F2;color:#DC2626'};
+  list.innerHTML = tried.map(f => {
+    const rec = records[f.id];
+    return `<div class="history-item">
+      <span class="history-emoji">${f.emoji}</span>
+      <div class="history-info">
+        <div class="history-name">${f.name}</div>
+        <div class="history-date">${formatDate(rec.date)}${rec.notes ? ' · ' + rec.notes.substring(0,35) : ''}</div>
+      </div>
+      <span class="history-reaction" style="${bgcol[rec.reaction]}">${labels[rec.reaction]}</span>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FOOD LOG MODAL
+// ═══════════════════════════════════════════════════════════════
+let currentFoodId = null, currentReaction = null;
+
+function openFood(id) {
+  const food = allFoodsFlat().find(f => f.id === id);
+  if (!food) return;
+  currentFoodId = id;
+  currentReaction = null;
+
+  document.getElementById('modalEmoji').textContent = food.emoji;
+  document.getElementById('modalTitle').textContent = food.name;
+
+  const rec = records[id];
+  if (rec) {
+    document.getElementById('modalDate').textContent = 'נרשם: ' + formatDate(rec.date);
+    document.getElementById('modalNotes').value = rec.notes || '';
+    clearReactionBtns();
+    currentReaction = rec.reaction;
+    document.querySelector('.rbtn-' + rec.reaction).classList.add('selected');
+    document.getElementById('resetBtn').style.display = 'block';
+  } else {
+    document.getElementById('modalDate').textContent = 'עדיין לא ניסיתם';
+    document.getElementById('modalNotes').value = '';
+    clearReactionBtns();
+    document.getElementById('resetBtn').style.display = 'none';
+  }
+  document.getElementById('foodModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('foodModal').classList.remove('open');
+  currentFoodId = null; currentReaction = null;
+}
+
+function selectReaction(type) {
+  currentReaction = type;
+  clearReactionBtns();
+  document.querySelector('.rbtn-' + type).classList.add('selected');
+}
+
+function clearReactionBtns() {
+  document.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('selected'));
+}
+
+function saveFood() {
+  if (!currentReaction) { alert('אנא בחרי תגובה'); return; }
+  records[currentFoodId] = {
+    reaction: currentReaction,
+    notes: document.getElementById('modalNotes').value.trim(),
+    date: new Date().toISOString(),
+  };
+  save();
+  closeModal();
+  renderAll();
+  updateStats();
+}
+
+function resetFood() {
+  if (!confirm('למחוק את הרישום עבור מזון זה?')) return;
+  delete records[currentFoodId];
+  save();
+  closeModal();
+  renderAll();
+  updateStats();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ADD CUSTOM FOOD
+// ═══════════════════════════════════════════════════════════════
+let selectedEmoji = '🍽';
+let addFoodTargetCat = 'vegetables';
+
+function openAddFood(cat) {
+  addFoodTargetCat = cat;
+  document.getElementById('addFoodCat').value = cat;
+  document.getElementById('addFoodName').value = '';
+  selectedEmoji = '🍽';
+  renderEmojiPicker();
+  document.getElementById('addFoodModal').classList.add('open');
+  setTimeout(() => document.getElementById('addFoodName').focus(), 300);
+}
+
+function closeAddFood() {
+  document.getElementById('addFoodModal').classList.remove('open');
+}
+
+function renderEmojiPicker() {
+  const picker = document.getElementById('emojiPicker');
+  picker.innerHTML = FOOD_EMOJIS.map(e =>
+    `<span class="emoji-opt ${e===selectedEmoji?'selected':''}" onclick="pickEmoji('${e}')">${e}</span>`
+  ).join('');
+}
+
+function pickEmoji(e) {
+  selectedEmoji = e;
+  document.querySelectorAll('.emoji-opt').forEach(el => el.classList.toggle('selected', el.textContent === e));
+}
+
+function saveCustomFood() {
+  const name = document.getElementById('addFoodName').value.trim();
+  const cat  = document.getElementById('addFoodCat').value;
+  if (!name) { alert('אנא הכניסי שם למזון'); return; }
+  const id = 'c_' + Date.now();
+  customFoods.push({id, name, emoji: selectedEmoji, cat});
+  save();
+  closeAddFood();
+  renderAll();
+  updateStats();
+}
+
+function deleteCustom(event, id) {
+  event.stopPropagation();
+  if (!confirm('למחוק מזון זה מהרשימה?')) return;
+  customFoods = customFoods.filter(f => f.id !== id);
+  delete records[id];
+  save();
+  renderAll();
+  updateStats();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════════════
+function openSettings() {
+  document.getElementById('nameInput').value = babyName;
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('open');
+}
+function saveName() {
+  babyName = document.getElementById('nameInput').value.trim();
+  save();
+  document.getElementById('headerName').textContent = babyName || 'שם הילד';
+  closeSettings();
+}
+function clearAllData() {
+  if (!confirm('למחוק את כל הנתונים? פעולה זו אינה הפיכה!')) return;
+  records = {}; customFoods = []; babyName = '';
+  localStorage.clear();
+  closeSettings();
+  renderAll();
+  updateStats();
+  document.getElementById('headerName').textContent = 'שם הילד';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════════════
+function switchTab(tab, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + tab).classList.add('active');
+  btn.classList.add('active');
+  if (tab === 'history') renderHistory();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════════════════════
+function updateStats() {
+  const all = allFoodsFlat();
+  const tried = all.filter(f => records[f.id]);
+  document.getElementById('statTried').textContent   = tried.length;
+  document.getElementById('statOk').textContent      = tried.filter(f => records[f.id].reaction === 'ok').length;
+  document.getElementById('statAllergen').textContent = ALLERGENS.filter(a => records[a.id]).length;
+  document.getElementById('statAlert').textContent   = tried.filter(f => records[f.id].reaction !== 'ok').length;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════
+function formatDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('he-IL', {day:'numeric', month:'short', year:'2-digit'});
+}
+
+// Close modals on backdrop click
+['foodModal','addFoodModal','settingsModal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+});
+
+init();
+</script>
+</body>
+</html>
